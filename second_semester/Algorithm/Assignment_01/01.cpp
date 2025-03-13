@@ -34,12 +34,13 @@ int ProfileGCD() {
 }
 
 int Classify(int a) {
-  if (a == 0)
-    return 1;
-  else if (a == 1)
-    return 2;
-  else
+  // Check a>1 first:
+  if (a > 1)
     return 3;
+  else if (a == 0)
+    return 1;
+  else
+    return 2; // covers the case a == 1
 }
 
 int main() {
