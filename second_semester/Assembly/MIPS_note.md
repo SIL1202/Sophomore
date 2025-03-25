@@ -48,3 +48,24 @@ MIPS 中的 `syscall` 由 `$v0` 決定執行的動作：
     
     li $v0, 10
     syscall
+
+
+    la $t0, num1 = {
+
+        int num;
+
+        int *t0 = &num;
+
+    }
+
+    lw $t1, 0($t0) = {
+
+        int t1 = *t0;
+
+    }
+
+    sw $t2, 0($t0) = {
+
+        *t0 = t2;    
+
+    }
