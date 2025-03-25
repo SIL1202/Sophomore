@@ -1,6 +1,7 @@
 .data
-num1: .word -77 #define var num1
-num2: .word -12 #define var num2
+num1: .word 0 #define var num1
+num2: .word 0 #define var num2
+prompt0: .asciiz "Input two numbers:\n"
 prompt1: .asciiz "output:\n"
 prompt2: .asciiz "quotient: "
 prompt3: .asciiz "remainder: "
@@ -9,15 +10,30 @@ slash: .asciiz " / "
 equal: .asciiz " = "
 remain: .asciiz " ... " 
 newline: .asciiz "\n"
- 					# 45 / 5 = 9 ... 0
+
 .text
 .globl main
 main:
+
+  li $v0, 4       # output string
+  la $a0, prompt0 # load address of prompt0 to $a0
+  syscall 
+  
+  li $v0, 5
+  syscall         # user input and store value in $v0
+  la $a0, num1    # load address of num1
+  sw $v0, 0($a0)  # store value in num1's address
+
+  li $v0, 5
+  syscall         # user input and store value in $v0
+  la $a0, num2    # load address of num2
+  sw $v0, 0($a0)  # store value in num1's address
+
 	li $v0, 4       # output string
-	la $a0, prompt1 # load address of prompt to $a0
+	la $a0, prompt1 # load address of prompt1 to $a0
 	syscall
 
-	la $t0, num1 	# load address of num1
+	la $t0, num1 	  # load address of num1
 	lw $t0, 0($t0) 	# read $t0 to $t1
 
 ## print num1:
@@ -94,4 +110,10 @@ main:
 	li $v0, 1
 	move $a0, $t3 	# copy $t3 to $a0
 	syscall		
+
+## print "\n"	
+	li $v0, 4	# output string
+	la $a0, newline # load address of newline to $a0
+	syscall
+	syscall		# double newline
 
