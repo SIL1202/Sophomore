@@ -49,7 +49,7 @@ MIPS 中的 `syscall` 由 `$v0` 決定執行的動作：
     li $v0, 10
     syscall
 
-
+##  Register operation Examples
     la $t0, num1 = {
 
         int num;
