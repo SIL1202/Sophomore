@@ -1,7 +1,9 @@
 // output n numbers in fibonacci sequence.
 
 #include <iostream>
+using namespace std;
 
+/*
 // 0, 1, 1, 2, 3
 void fib(int n, int *a) {
   if (n <= 2) {
@@ -21,8 +23,43 @@ int main() {
   int *a = new int[n];
 
   fib(n, a);
-  for (int i = 0; i < n; i++)
-    std::cout << a[i] << ", ";
+  bool first = true;
+  for (int i = 0; i < n; i++) {
+    if (!first)
+      std::cout << ", ";
+    std::cout << a[i];
+    first = false;
+  }
+
   delete[] a;
   return 0;
+} */
+
+int main() {
+  int n;
+  cin >> n;
+  int temp1, temp2, ans;
+  temp1 = 0;
+  temp2 = 1;
+
+  if (n == 0)
+    exit(1);
+
+  cout << temp1 << '\n';
+  if (n == 1)
+    exit(1);
+
+  cout << temp2 << '\n';
+  if (n == 2)
+    exit(1);
+
+  int index = 2;
+  while (index != n) {
+    ans = temp2 + temp1;
+    cout << ans << '\n';
+
+    temp1 = temp2;
+    temp2 = ans;
+    index++;
+  }
 }
