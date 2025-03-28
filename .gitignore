@@ -1,3 +1,4 @@
 # .gitignore
 
 **/DS.Store
+**/lex.yy.c
