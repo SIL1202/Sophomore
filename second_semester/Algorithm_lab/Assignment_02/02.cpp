@@ -1,80 +1,48 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
 typedef double DataType;
 std::vector<DataType> given;
+
 struct DataSet {
   size_t begin, count;
 };
 
-//
-/*
-void solve(DataSet input, std::vector<DataType> &Max) {
-  DataType val = given[input.begin];
+std::vector<DataType> solve(DataSet input) {
   if (input.count == 1) {
-    Max.push_back(val);
-    std::sort(Max.begin(), Max.end(),
-              [](DataType a, DataType b) { return a > b; });
-    if (Max.size() > 3)
-      Max.pop_back();
-    return;
+    return {given[input.begin]};
   }
 
-  DataSet temp[2]; // use array instead of dynamic allocate
-  // std::vector<DataSet> temp(2);
-  temp[0].begin = input.begin;                   // 0 ... 5 ... 10
-  temp[0].count = (input.count + 1) / 2;         // (11+1) / 2 = 6
-  temp[1].begin = temp[0].begin + temp[0].count; // 5  6  7    8 9
-  temp[1].count = input.count / 2;               // 11 / 2 = 5
+  DataSet left, right;
+  left.begin = input.begin;
+  left.count = input.count / 2;
+  right.begin = input.begin + left.count;
+  right.count = input.count - left.count;
 
-  solve(temp[0], Max);
-  solve(temp[1], Max);
+  auto leftMax = solve(left);
+  auto rightMax = solve(right);
+
+  std::vector<DataType> merged;
+  merged.insert(merged.end(), leftMax.begin(), leftMax.end());
+  merged.insert(merged.end(), rightMax.begin(), rightMax.end());
+
+  std::sort(merged.begin(), merged.end(), std::greater<DataType>());
+  if (merged.size() > 3) {
+    merged.resize(3);
+  }
+  return merged;
 }
 
 int main() {
-  DataSet data;
   given = {5, 33, 3, 45, 8, 9, 2, 1, 7, 0, 55};
-  data.count = given.size();
-  data.begin = 0;
-  std::vector<DataType> Max;
-  solve(data, Max);
-  for (DataType &answer : Max)
-    std::cout << answer << " ";
-  return 0;
-}
-*/
-// slowest version
-/*
-DataType solve(DataSet input, std::vector<DataType> &Max) {
-  if (input.count == 1) {
-    for (int i = 0; i < Max.size(); i++) {
-      if (given[input.begin] == Max[i]) {
-        return 0;
-      }
-    }
-    return given[input.begin];
-  }
+  DataSet data = {0, given.size()};
 
-  DataSet temp[2];             // use array instead of dynamic allocate
-                               // std::vector<DataSet> temp(2);
-  temp[0].begin = input.begin; // 0 ... 5 ... 10
-  temp[0].count = (input.count + 1) / 2;         // (11+1) / 2 = 6
-  temp[1].begin = temp[0].begin + temp[0].count; // 5  6  7    8 9
-  temp[1].count = input.count / 2;               // 11 / 2 = 5
+  auto top3 = solve(data);
 
-  return std::max(solve(temp[0], Max), solve(temp[1], Max));
-}
-
-int main() {
-  DataSet data;
-  given = {5, 33, 3, 45, 8, 9, 2, 1, 7, 0, 55};
-  data.count = given.size();
-  data.begin = 0;
-  std::vector<DataType> Max;
-  for (int i = 0; i < 3; i++) {
-    Max.push_back(solve(data, Max));
-    std::cout << Max[i] << " ";
+  std::cout << "Top 3 elements: ";
+  for (auto num : top3) {
+    std::cout << num << " ";
   }
   return 0;
 }
-*/
