@@ -20,6 +20,6 @@ int main() {
   end = high_resolution_clock().now();
   auto duration_merge = duration_cast<microseconds>(end - start);
 
-  std::cout << duration_quick.count() << std::endl;
+  std::cout << duration_merge.count() << std::endl;
   // merge.print();
 }
