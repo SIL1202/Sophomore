@@ -1,11 +1,19 @@
 #include "merge_sort.hpp"
-#include <iostream>
+#include "insertion_sort.hpp"
+#include <chrono>
+using namespace std::chrono;
 
 Merge::Merge() {}
 
-Merge::Merge(int n, std::vector<int> &a) : array(n) {
-  this->array.assign(a.begin(), a.end());
-  merge_sort(this->array);
+Merge::Merge(std::vector<int> &a) {
+  this->array1.assign(a.begin(), a.end());
+  this->array2.assign(a.begin(), a.end());
+
+  this->start_merge = high_resolution_clock::now();
+  merge_sort(this->array1);
+  this->end_merge = high_resolution_clock::now();
+
+  this->insertion_time = InsertionTimed::sort(array2, 0, array2.size());
 }
 
 void Merge::merge_sort(std::vector<int> &a) {
@@ -47,7 +55,8 @@ void Merge::merge_sorted_array(std::vector<int> &a, int l, int m, int r) {
   }
 }
 
-void Merge::print() {
-  for (int s : this->array)
-    std::cout << s << " ";
+nanoseconds Merge::merge_duration() {
+  return duration_cast<nanoseconds>(end_merge - start_merge);
 }
+
+nanoseconds Merge::insertion_duration() { return this->insertion_time; }

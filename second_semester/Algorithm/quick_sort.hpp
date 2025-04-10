@@ -1,5 +1,4 @@
-#ifndef QUICK_SORT_HPP
-#define QUICK_SORT_HPP
+#pragma once
 #include<vector>
 #include<chrono>
 
@@ -19,9 +18,7 @@ public:
   Quick();
   Quick(std::vector<int> &);
 
-  void print();
   std::chrono::nanoseconds quick_duration();
   std::chrono::nanoseconds insertion_duration();
 };
 
-#endif
