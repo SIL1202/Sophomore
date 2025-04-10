@@ -3,10 +3,8 @@
 
 Merge::Merge() {}
 
-Merge::Merge(int n) : array(n) {
-  for (int i = 0; i < n; i++)
-    array[i] = n - i;
-
+Merge::Merge(int n, std::vector<int> &a) : array(n) {
+  this->array.assign(a.begin(), a.end());
   merge_sort(this->array);
 }
 
