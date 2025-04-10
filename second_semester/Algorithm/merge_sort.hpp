@@ -11,7 +11,7 @@ class Merge{
   
   public:
     Merge();
-    Merge(int);
+    Merge(int, std::vector<int> &);
 
     void print();  
 };

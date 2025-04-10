@@ -1,13 +1,35 @@
 #include "quick_sort.hpp"
-#include <iostream>
+#include <chrono>
+using namespace std::chrono;
 
 Quick::Quick() {}
 
-Quick::Quick(int n) : array(n) {
-  for (int i = 0; i < n; i++)
-    array[i] = n - i;
+Quick::Quick(std::vector<int> &a) {
+  this->array1.assign(a.begin(), a.end());
+  this->array2.assign(a.begin(), a.end());
 
-  quickSort(array, 0, n - 1);
+  this->start_quick = high_resolution_clock::now();
+  quickSort(array1, 0, a.size() - 1);
+  this->end_quick = high_resolution_clock::now();
+
+  this->start_insertion = high_resolution_clock::now();
+  insertion_sort(array2);
+  this->end_insertion = high_resolution_clock::now();
+}
+
+// insertion_sort
+void insertion_sort(std::vector<int> &arr) {
+  int i, j, key;
+  int len = arr.size();
+  for (i = 1; i != len; ++i) {
+    key = arr[i];
+    j = i - 1;
+    while ((j >= 0) && (arr[j] > key)) {
+      arr[j + 1] = arr[j];
+      j--;
+    }
+    arr[j + 1] = key;
+  }
 }
 
 void Quick::swap(int &a, int &b) {
@@ -23,9 +45,6 @@ void Quick::quickSort(std::vector<int> &array, int low, int high) {
   }
 
   int pivot = quick_partition(array, low, high);
-
-  // 記錄當前範圍內的數組、pivot 位置、遞迴深度
-  std::vector<int> temp(array.begin() + low, array.begin() + high + 1);
 
   quickSort(array, low, pivot - 1);
   quickSort(array, pivot + 1, high);
@@ -45,8 +64,10 @@ int Quick::quick_partition(std::vector<int> &array, int low, int high) {
   return i;
 }
 
-void Quick::print() {
-  for (int s : Quick::array)
-    std::cout << s << " ";
+nanoseconds Quick::quick_duration() {
+  return duration_cast<nanoseconds>(end_quick - start_quick);
 }
-// Print function
+
+nanoseconds Quick::insertion_duration() {
+  return duration_cast<nanoseconds>(end_insertion - start_insertion);
+}
