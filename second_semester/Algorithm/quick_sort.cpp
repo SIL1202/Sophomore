@@ -1,4 +1,5 @@
 #include "quick_sort.hpp"
+#include "insertion_sort.hpp"
 #include <chrono>
 using namespace std::chrono;
 
@@ -12,24 +13,7 @@ Quick::Quick(std::vector<int> &a) {
   quickSort(array1, 0, a.size() - 1);
   this->end_quick = high_resolution_clock::now();
 
-  this->start_insertion = high_resolution_clock::now();
-  insertion_sort(array2);
-  this->end_insertion = high_resolution_clock::now();
-}
-
-// insertion_sort
-void insertion_sort(std::vector<int> &arr) {
-  int i, j, key;
-  int len = arr.size();
-  for (i = 1; i != len; ++i) {
-    key = arr[i];
-    j = i - 1;
-    while ((j >= 0) && (arr[j] > key)) {
-      arr[j + 1] = arr[j];
-      j--;
-    }
-    arr[j + 1] = key;
-  }
+  this->insertion_time = InsertionTimed::sort(array2, 0, array2.size());
 }
 
 void Quick::swap(int &a, int &b) {
@@ -68,6 +52,4 @@ nanoseconds Quick::quick_duration() {
   return duration_cast<nanoseconds>(end_quick - start_quick);
 }
 
-nanoseconds Quick::insertion_duration() {
-  return duration_cast<nanoseconds>(end_insertion - start_insertion);
-}
+nanoseconds Quick::insertion_duration() { return this->insertion_time; }
