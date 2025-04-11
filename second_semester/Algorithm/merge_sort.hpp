@@ -2,7 +2,6 @@
 #include <vector>
 #include <chrono>
 
-void insertion_sort(std::vector<int> &);
 
 class Merge{
   private:

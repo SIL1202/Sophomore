@@ -2,14 +2,12 @@
 #include<vector>
 #include<chrono>
 
-void insertion_sort(std::vector<int> &);
-
 class Quick{
 private:
   std::vector<int> array1, array2;
   std::chrono::high_resolution_clock::time_point start_quick, end_quick;
-  std::chrono::high_resolution_clock::time_point start_insertion, end_insertion;
-
+  std::chrono::nanoseconds insertion_time;
+  
   void swap(int &, int &);
   void quickSort(std::vector<int> &, int, int);
   int quick_partition(std::vector<int> &, int, int);

@@ -10,9 +10,18 @@ void QuickSort_with_InsertionSort(std::vector<int> &);
 void MergeSort_with_InsertionSort(std::vector<int> &);
 
 int main() {
-  std::vector<int> inputSizes = {100, 1000, 10000, 100000};
-  QuickSort_with_InsertionSort(inputSizes);
-  MergeSort_with_InsertionSort(inputSizes);
+  std::vector<int> array1, array2;
+  for (int i = 2; i <= 40; i++) {
+    int t = i;
+    array1.push_back(t);
+  }
+  for (int i = 48; i <= 60; i++) {
+    int t = i * 10;
+    array2.push_back(t);
+  }
+  QuickSort_with_InsertionSort(array1);
+  std::cout << std::endl;
+  MergeSort_with_InsertionSort(array2);
   return 0;
 }
 
@@ -38,7 +47,7 @@ void QuickSort_with_InsertionSort(std::vector<int> &inputSizes) {
 }
 
 void MergeSort_with_InsertionSort(std::vector<int> &inputSizes) {
-  for (int n : inputSizes) {
+  for (int n : inputSizes) { // the time when n is difference size.
     std::chrono::nanoseconds total_quick{0}, total_insert{0};
     std::vector<int> sample = generate_random_array(n);
     Merge sorter(sample);
@@ -46,7 +55,9 @@ void MergeSort_with_InsertionSort(std::vector<int> &inputSizes) {
     std::chrono::nanoseconds Insertion = sorter.insertion_duration();
 
     std::cout << "n = " << n << " | ";
-    std::cout << "QuickSort " << Merge.count() << " ns, ";
+    std::cout << "MergeSort " << Merge.count() << " ns, ";
     std::cout << "InsertionSort " << Insertion.count() << " ns\n";
+    // if (Merge.count() < Insertion.count())
+    //   exit(0);
   }
 }
