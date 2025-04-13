@@ -8,7 +8,7 @@ class Merge{
     std::vector<int> array1, array2;
     std::chrono::high_resolution_clock::time_point start_merge, end_merge;
     std::chrono::nanoseconds insertion_time;
-        
+    const int TERMINAL_THRESHOLD = 600;       
 
     void merge_sort(std::vector<int> &);
     void merge_sorted_array(std::vector<int> &, int, int, int);

@@ -13,7 +13,8 @@ Merge::Merge(std::vector<int> &a) {
   merge_sort(this->array1);
   this->end_merge = high_resolution_clock::now();
 
-  this->insertion_time = InsertionTimed::sort(array2, 0, array2.size());
+  // For analyze threshold value
+  // this->insertion_time = InsertionTimed::sort(array2, 0, array2.size());
 }
 
 void Merge::merge_sort(std::vector<int> &a) {
@@ -21,12 +22,15 @@ void Merge::merge_sort(std::vector<int> &a) {
 }
 
 void Merge::merge_sorted_recursion(std::vector<int> &a, int l, int r) {
+  if (r - l + 1 <= this->TERMINAL_THRESHOLD) {
+    InsertionTimed::sort(a, l, r); // inclusive 範圍
+    return;
+  }
+
   if (l < r) {
     int mid = l + (r - l) / 2;
-
     merge_sorted_recursion(a, l, mid);
     merge_sorted_recursion(a, mid + 1, r);
-
     merge_sorted_array(a, l, mid, r);
   }
 }
