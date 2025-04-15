@@ -8,6 +8,8 @@
 # shift_loop: simulates the 'while' loop that shifts elements
 # insert_key: finally inserts the key into the correct position
 
+# Please enter one number per line to avoid syscall 5 crash.
+
 .data
 space: .asciiz " "
 newline: .asciiz "\n"
