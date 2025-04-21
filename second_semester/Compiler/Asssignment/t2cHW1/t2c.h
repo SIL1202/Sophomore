@@ -34,10 +34,9 @@ extern int yyparse();
 extern FILE *yyin;
 extern int yyerror(char *);
 
-extern void print_lex( int );
+extern void print_lex(int);
 
 extern char name[16];
 extern int ival;
 extern float rval;
 extern char qstr[80];
-

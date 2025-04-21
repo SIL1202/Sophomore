@@ -38,7 +38,9 @@ REAL		{return lREAL;}
 ">="		{return lGE;}
 "<="		{return lLE;}
 
-// Identifiers, Integer numbers, Real numbers
+{ID}   { strcpy(name, yytext); return lID; }
+{DIG}  { ival = atoi(yytext); return lINUM; }
+{RNUM} { rval = atof(yytext); return lRNUM; }
 
 \"{NQUO}*\"	{sscanf(yytext,"%s", qstr); return lQSTR;}
 "/*"		{ BEGIN(C_COMMENT); }
@@ -109,4 +111,3 @@ void print_lex( int t ) {
     default: printf("******** lexical error!!!");
     }
 }
-
