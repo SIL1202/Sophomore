@@ -9,7 +9,7 @@ char qstr[80];
 
 int main(int argc,char *argv[]) {
     int t;
-
+    
     yyin = fopen(argv[1],"r");
     t = yyparse();
 }
