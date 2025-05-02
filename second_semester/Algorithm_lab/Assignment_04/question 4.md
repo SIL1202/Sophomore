@@ -18,7 +18,7 @@ Change-making is a classical problem that asking you to use as few coins as poss
 >
 > Result: a set of integer factors $A = \{a_1, a_2, \dots, a_n\}$ that $\sum_{i = 1}^{n} a_i c_i = m$ and minimize $\sum_{i = 1}^{n} a_i$
 
-For above problem, we may use the heuristic "larger value may reach the specified amount faster" to design and implement the algorithm as below:
+For above problem, we may use the heuristic "larger value may reach the specified amount faster" to design and implement the algorithm as below: 
 
 ```C++
 #include <vector>
@@ -86,7 +86,7 @@ By question 1. we can design an greedy algorithm for finding minimum spanning tr
 2. Find a safe edge $e = (u, v)$ that $v \in V_T$ and $u \notin V_T$. 
 3. $V_T \leftarrow V_T \cup \{u\}$, $E_T \leftarrow E_T \cup \{e\}$
 4. Repeat step 2 and 3 until no safe edges.
- 
+
 
 We can implement the above algorithm as followed: 
 
