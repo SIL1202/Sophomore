@@ -555,7 +555,7 @@ int Greedy_k_best(const vector<int>& p, const vector<int>& w, int total, int k =
 
 ##### Time analysis
 
-
+![screenshot](/Users/sil/programming%20assignments/Algorithm/HW2/screenshot.png)
 
 ---
 
@@ -584,13 +584,19 @@ Future experiments may adjust the value of `k` in the top-k method or combine mu
 
 ---
 
+---
+
 ## Conclusion
 
-This study shows that:
-- Bottom-Up and Top-Down are robust and always provide optimal solutions.
-- Greedy is extremely fast and performs well when `p/w` ratios are uniform.
-- Greedy may fail when large profits are paired with large weights (misleading high ratios).
-- For exact solutions and medium-sized inputs, Top-Down is often preferable due to memory efficiency.
-- For real-time or approximate contexts, Greedy remains highly efficient and acceptable.
+This report presents a comprehensive comparison of three primary approaches to solving the 0/1 Knapsack Problem: Bottom-Up Dynamic Programming, Top-Down Memoization, and Greedy-based heuristics. Through extensive experimentation across a diverse set of test cases—including small, large, uniform, and edge-case inputs—we observed that:
 
-Overall, the experiments confirm that while DP methods guarantee correctness, their performance is strongly affected by the magnitude of W. Greedy provides significant speed advantage but at the cost of accuracy in non-uniform scenarios. A hybrid or approximate method could balance both.
+- **Bottom-Up DP** consistently provides optimal results and performs reliably across all input types. However, it incurs higher space usage and computational cost, especially when the capacity `W` is large.
+- **Top-Down DP** achieves the same accuracy as Bottom-Up while often requiring less computation due to its selective recursion. It also simplifies certain forms of problem tracing and extension.
+- **Greedy methods**, while not always optimal, demonstrate significantly faster runtimes. The classic `profit/weight` heuristic performs well in many cases but may fail under irregular distributions.
+
+In addition, we explored **advanced Greedy heuristics**, including square root scaling, penalty adjustment, and top-k brute-force hybridization. Notably, the penalized greedy method (`p / (w + penalty)`) was able to match the DP result exactly in the tested scenario, indicating potential for practical use when speed is critical and accuracy tolerance exists.
+
+Overall, we conclude that:
+- **For exact solutions**, DP methods remain indispensable.
+- **For approximate or real-time applications**, Greedy methods—especially with refined heuristics—offer a powerful alternative.
+- Future directions may include hybrid strategies, dynamic penalty tuning, or adaptive heuristic selection based on input analysis.
