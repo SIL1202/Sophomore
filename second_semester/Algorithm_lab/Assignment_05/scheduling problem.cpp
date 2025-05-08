@@ -55,21 +55,49 @@ int min_cover(std::vector<Activity> A, int S, int T) {
   return count; // Return the minimum number of activities used
 }
 
+// Return the minimum number of rooms needed to schedule all activities
+int min_rooms(std::vector<Activity> A) {
+  std::vector<std::pair<int, int>> events;
+
+  for (auto &act : A) {
+    events.emplace_back(act.s, +1); // start event
+    events.emplace_back(act.e, -1); // end event
+  }
+
+  // Sort by time; if equal, end (-1) before start (+1)
+  std::sort(events.begin(), events.end(), [](auto &a, auto &b) {
+    return a.first == b.first ? a.second < b.second : a.first < b.first;
+  });
+
+  int ongoing = 0;   // current number of active rooms
+  int max_rooms = 0; // maximum rooms used at any time
+
+  for (auto &[time, delta] : events) {
+    ongoing += delta;
+    max_rooms = std::max(max_rooms, ongoing);
+  }
+
+  return max_rooms;
+}
+
 int main() {
   // Example test case
   std::vector<Activity> A = {{0, 4}, {2, 6}, {4, 8}, {5, 10}, {6, 9}, {9, 10}};
 
-  std::cout << "Maximum activities to cover: " << max_schedule(A) << std::endl;
+  int result1 = max_schedule(A);
+  std::cout << "Maximum activities to cover: " << result1 << std::endl;
 
   int S = 0, T = 10;
 
-  int result = min_cover(A, S, T);
-  if (result != -1)
+  int result2 = min_cover(A, S, T);
+  if (result2 != -1)
     std::cout << "Minimum activities to cover [" << S << ", " << T
-              << "): " << result << std::endl;
+              << "): " << result2 << std::endl;
   else
     std::cout << "Cannot cover the full interval with given activities."
               << std::endl;
 
+  int result3 = min_rooms(A);
+  std::cout << "Minimum number of rooms needed: " << result3 << std::endl;
   return 0;
 }
