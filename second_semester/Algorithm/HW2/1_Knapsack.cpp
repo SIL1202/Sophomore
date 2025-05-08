@@ -1,10 +1,15 @@
 #include <algorithm>
 #include <chrono>
+#include <cstdlib>
 #include <iostream>
 #include <utility>
 #include <vector>
 using namespace std;
 using namespace chrono;
+
+int Bottom_up(vector<int> &p, vector<int> &w, int total);
+int Top_Down(vector<int> &p, vector<int> &w, int total, int n);
+int Greedy(vector<int> &p, vector<int> &w, int total, int n);
 
 int Bottom_up(vector<int> &p, vector<int> &w, int total) {
   int n = p.size();
@@ -31,9 +36,12 @@ int recursive(vector<int> &p, vector<int> &w, int total, int n) {
   if (cache[n][total] != -1)
     return cache[n][total];
 
+  int pick = 0;
   if (w[n] <= total)
-    cache[n][total] = max(p[n] + recursive(p, w, total - w[n], n - 1),
-                          recursive(p, w, total, n - 1));
+    pick = p[n] + recursive(p, w, total - w[n], n - 1);
+
+  int not_pick = recursive(p, w, total, n - 1);
+  cache[n][total] = max(pick, not_pick);
 
   return cache[n][total];
 }
@@ -60,34 +68,73 @@ int Greedy(vector<int> &p, vector<int> &w, int total, int n) {
   return totalProfit;
 }
 
+#include <fstream>
+#include <sstream>
+
+struct TestCase {
+  int n, totalWeight;
+  vector<int> profits, weights;
+};
+
+vector<TestCase> loadTestCases(const string &filename) {
+  ifstream in(filename);
+  vector<TestCase> cases;
+  string line;
+  while (getline(in, line)) {
+    if (line.empty() || line[0] == '#')
+      continue;
+
+    TestCase tc;
+    stringstream ss(line);
+    ss >> tc.n >> tc.totalWeight;
+
+    // 讀 profits
+    getline(in, line);
+    stringstream ps(line);
+    tc.profits.resize(tc.n);
+    for (int i = 0; i < tc.n; ++i)
+      ps >> tc.profits[i];
+
+    // 讀 weights
+    getline(in, line);
+    stringstream ws(line);
+    tc.weights.resize(tc.n);
+    for (int i = 0; i < tc.n; ++i)
+      ws >> tc.weights[i];
+
+    cases.push_back(tc);
+  }
+  return cases;
+}
+
 int main() {
-  int n = 10;
-  int totalWeight = 100;
+  auto testcases = loadTestCases("input.txt");
 
-  vector<int> profits{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-  vector<int> weights{2, 3, 4, 5, 6, 4, 3, 7, 9, 3};
+  for (int i = 0; i < testcases.size(); ++i) {
+    auto &tc = testcases[i];
+    int n = tc.n;
 
-  auto start_B = chrono::high_resolution_clock::now();
-  cout << "Bottom-Up total profit: " << Bottom_up(profits, weights, totalWeight)
-       << endl;
-  auto end_B = chrono::high_resolution_clock::now();
-  auto duration = chrono::duration_cast<nanoseconds>(end_B - start_B);
-  cout << "Bottom-Up time consumption: " << duration.count() << endl;
+    auto start_B = chrono::high_resolution_clock::now();
+    int res_B = Bottom_up(tc.profits, tc.weights, tc.totalWeight);
+    auto end_B = chrono::high_resolution_clock::now();
+    auto dur_B = chrono::duration_cast<chrono::microseconds>(end_B - start_B);
 
-  auto start_T = chrono::high_resolution_clock::now();
-  // for memorizing top-down approach
-  cache.assign(n, vector<int>(totalWeight + 1, -1));
-  cout << "Top-Down total profit: "
-       << Top_Down(profits, weights, totalWeight, n) << endl;
-  auto end_T = chrono::high_resolution_clock::now();
-  duration = chrono::duration_cast<nanoseconds>(end_T - start_T);
-  cout << "Top-Down time consumption: " << duration.count() << endl;
+    cache.assign(n, vector<int>(tc.totalWeight + 1, -1));
+    auto start_T = chrono::high_resolution_clock::now();
+    int res_T = Top_Down(tc.profits, tc.weights, tc.totalWeight, n);
+    auto end_T = chrono::high_resolution_clock::now();
+    auto dur_T = chrono::duration_cast<chrono::microseconds>(end_T - start_T);
 
-  auto start_G = chrono::high_resolution_clock::now();
-  cout << "Greedy total profit: " << Greedy(profits, weights, totalWeight, n)
-       << endl;
-  auto end_G = chrono::high_resolution_clock::now();
-  duration = chrono::duration_cast<nanoseconds>(end_G - start_G);
-  cout << "Greedy time consumption: " << duration.count() << endl;
-  return 0;
+    auto start_G = chrono::high_resolution_clock::now();
+    int res_G = Greedy(tc.profits, tc.weights, tc.totalWeight, n);
+    auto end_G = chrono::high_resolution_clock::now();
+    auto dur_G = chrono::duration_cast<chrono::microseconds>(end_G - start_G);
+
+    cout << "[" << i << "] Bottom-Up total profit: " << res_B << endl;
+    cout << "[" << i << "] Bottom-Up time (us): " << dur_B.count() << endl;
+    cout << "[" << i << "] Top-Down total profit: " << res_T << endl;
+    cout << "[" << i << "] Top-Down time (us): " << dur_T.count() << endl;
+    cout << "[" << i << "] Greedy total profit: " << res_G << endl;
+    cout << "[" << i << "] Greedy time (us): " << dur_G.count() << endl;
+  }
 }
