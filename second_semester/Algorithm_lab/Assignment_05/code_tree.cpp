@@ -37,7 +37,7 @@ private:
   };
   void travel(const Node *v, std::string prefix) {
     if (v->e0 == nullptr && v->e1 == nullptr)
-      code[v->ch] = prefix;
+      code[v->ch] = prefix.empty() ? "0" : prefix;
 
     if (v->e0)
       travel(v->e0, prefix + "0");
