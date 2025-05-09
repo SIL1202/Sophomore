@@ -1,6 +1,0 @@
-Huffman codes for 'ABRACADABRA':
-A: 0
-B: 110
-C: 100
-D: 101
-R: 111
