@@ -1,4 +1,4 @@
-#include "Tsp_fast_algorithms.h"
+#include "tsp_fast_algorithms.h"
 
 // Nearest Neighbor Heuristic (Greedy)
 int tspNearestNeighbor(const vector<vector<int>> &dist) {
