@@ -215,7 +215,7 @@ We tested TSP instances with 4, 6, 8, and 10 cities. The distances between citie
 
 Example result format:
 
-<img src="/Users/sil/programming%20assignments/Algorithm/HW3/TSP_project/assets/combine1.jpeg" alt="combine1" style="zoom:80%;" />
+<img src="./assets/combine1.jpeg" alt="TSP Combined Output 1" style="zoom:80%;" />
 
 - ### Experimental Observations
 
@@ -296,7 +296,7 @@ Example result format:
 
 This section presents a detailed analysis of the experimental results for the Traveling Salesman Problem (TSP) under a special case: cities randomly distributed on a 2D plane. Each configuration was tested across five rounds with various algorithms.
 
-![combine](/Users/sil/programming%20assignments/Algorithm/HW3/TSP_project/assets/combine2.png)
+![TSP Combined Output 2](./assets/combine2.png)
 
 ### **Detailed Observations**
 
