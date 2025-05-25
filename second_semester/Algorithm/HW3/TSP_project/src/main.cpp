@@ -1,6 +1,8 @@
 // TSP experiment runner: auto-generate symmetric distance matrices and test TSP
 // algorithms
-#include "tsp_solver.h"
+#include "tsp_fast_algorithms.h" // Nearest Neighbor + Held-Karp
+#include "tsp_metaheuristics.h"
+#include "tsp_solver.h" // Your main TSP class (DFS/BFS/BestFS)
 #include <cstdlib>
 #include <ctime>
 #include <iomanip>
@@ -9,7 +11,7 @@
 
 using namespace std;
 
-// (number of cities n，distance range [minW, maxW])
+// Generate a symmetric distance matrix with weights in [minW, maxW]
 vector<vector<int>> generateSymmetricMatrix(int n, int minW, int maxW) {
   vector<vector<int>> dist(n, vector<int>(n));
   for (int i = 0; i < n; ++i) {
@@ -35,13 +37,32 @@ void runExperiment(int n, int minW, int maxW) {
   int costBest = tsp.solveBestFS();
   int bestVisits = tsp.getVisitCount();
 
+  int nnCost;
+  std::vector<int> nnPath = tspNearestNeighbor(dist, nnCost); // FIXED
+  int costDP = (n <= 20 ? tspHeldKarp(dist) : -1);
+
+  int cost2opt = tsp2opt(nnPath, dist); // Use NN result
+  int costSA = tspSimulatedAnnealing(dist);
+  int costGA = tspGenetic(dist);
+
   cout << "Cities: " << n << ", Range: [" << minW << ", " << maxW << "]\n";
-  cout << "  DFS:    cost = " << setw(3) << costDFS
+  cout << "  DFS:       cost = " << setw(3) << costDFS
        << ", visits = " << dfsVisits << '\n';
-  cout << "  BFS:    cost = " << setw(3) << costBFS
+  cout << "  BFS:       cost = " << setw(3) << costBFS
        << ", visits = " << bfsVisits << '\n';
-  cout << "  BestFS: cost = " << setw(3) << costBest
-       << ", visits = " << bestVisits << "\n\n";
+  cout << "  BestFS:    cost = " << setw(3) << costBest
+       << ", visits = " << bestVisits << '\n';
+  cout << "  NN:        cost = " << setw(3) << nnCost
+       << " (greedy heuristic)\n";
+
+  if (costDP != -1)
+    cout << "  Held-Karp: cost = " << setw(3) << costDP << " (exact DP)\n";
+  cout << "  2-opt:     cost = " << setw(3) << cost2opt
+       << " (optimized path)\n";
+  cout << "  SA:        cost = " << setw(3) << costSA
+       << " (simulated annealing)\n";
+  cout << "  GA:        cost = " << setw(3) << costGA
+       << " (genetic algorithm)\n\n";
 }
 
 int main() {

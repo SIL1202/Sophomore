@@ -12,7 +12,8 @@
 using namespace std;
 
 // Nearest Neighbor Heuristic (Greedy)
-int tspNearestNeighbor(const vector<vector<int>> &dist);
+std::vector<int> tspNearestNeighbor(const std::vector<std::vector<int>> &dist,
+                                    int &cost);
 
 // Held-Karp Dynamic Programming Algorithm
 int tspHeldKarp(const vector<vector<int>> &dist);
