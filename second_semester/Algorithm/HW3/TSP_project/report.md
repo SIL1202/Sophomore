@@ -211,42 +211,82 @@ int tspGenetic(...);
 
 #### Test Setup Summary
 
-We tested TSP instances with 4, 6, 8, and 10 cities. The distances between cities were generated randomly, with values ranging from either 1 to 10 or 1 to 100. Each instance was solved using eight different algorithms, and we recorded both the total cost of the route and, where applicable, the number of nodes visited during the search.
+We tested TSP instances with 4, 6, 8, and 10 cities. The distances between cities were generated randomly, with values ranging from either 1 to 10 or 1 to 100. Each instance was solved using eight different algorithms, and we recorded both the total cost of the route and, where applicable, the number of nodes visited during the search. 
 
 Example result format:
 
 <img src="/Users/sil/programming%20assignments/Algorithm/HW3/TSP_project/assets/combine1.jpeg" alt="combine1" style="zoom:80%;" />
 
-### Experimental Observations
+- ### Experimental Observations
 
-Among the exact algorithms, DFS and BFS were the most straightforward, as they explore all possible permutations of cities to guarantee the optimal solution. However, they also visited the largest number of nodes. This brute-force nature makes them infeasible for city counts greater than 8 due to exponential growth in complexity. BestFS, which improves upon BFS by incorporating pruning using a lower bound estimate, significantly reduced the number of visited nodes while still returning the correct result. When we enhanced the lower bound with an MST-based heuristic, the pruning efficiency increased even further, especially noticeable at n = 8 and above. The Held-Karp algorithm, based on dynamic programming and bitmasking, also reliably produced the correct result, but it became slower as the city count increased.
+  In our experiments, we compared a wide range of TSP algorithms—exact, heuristic, and metaheuristic—across different input sizes and distance ranges. Below is a summary of our findings and key trends.
 
-For faster, non-exact algorithms, the Nearest Neighbor (NN) approach stood out for its simplicity and speed. It selects the nearest unvisited city at each step, which works quickly but often results in poor route quality—especially when the distance range is wider or the number of cities is larger. The 2-opt algorithm builds upon the NN path by repeatedly reversing segments to reduce the total cost. While it improves the initial route significantly, the final result depends heavily on the quality of the starting path, and it doesn’t guarantee finding the optimal solution.
+  #### Exact Methods
 
-Among the metaheuristics, Simulated Annealing (SA) and Genetic Algorithm (GA) showed promising results. SA starts by accepting worse solutions to escape local optima, then gradually cools down and becomes more selective. Its results were sometimes close to optimal but not always consistent, depending on the parameters used. On the other hand, GA was the most stable heuristic we tested. It starts with a random population of routes and evolves them through selection, crossover, and mutation. In many tests, GA produced results identical to BestFS or very close, making it a strong choice for larger TSP instances.
+  **DFS** and **BFS** perform exhaustive search, visiting all `n!` permutations. They guarantee optimal results but quickly become intractable as `n` increases. At `n = 10`, both visited over 980,000 nodes.
 
-### Additional Observations
+  **BestFS** significantly improves over BFS by pruning unpromising branches using a lower bound heuristic. With the addition of an MST-based lower bound, BestFS was able to reduce visited nodes by over 10x in many cases, especially from `n = 8` onward. 
 
-We observed that when the distance range was expanded to [1, 100], algorithms like NN performed worse because choosing a suboptimal edge had a much greater penalty. In contrast, GA and SA were more robust to such changes. BestFS showed substantial improvements when combined with MST-based lower bounds, reducing visited nodes dramatically in larger cases. Overall, GA stood out as the most reliable heuristic method, while SA and 2-opt offered modest improvements over NN but with less consistency.
+  **Held-Karp**, a dynamic programming solution using bitmasking, reliably produced optimal results for all tested cases up to `n = 10`, but becomes infeasible for `n > 20` due to exponential space requirements.
 
-### Summary of Findings
+  #### Fast Heuristics
 
-#### Observations:
+  **Nearest Neighbor (NN)** is simple and fast, selecting the closest unvisited city at each step. While efficient, it produced the least accurate results, especially under wider distance ranges like `[1, 100]` or when `n ≥ 8`.
 
-- **DFS / BFS**: Visit all permutations. At n = 10, the visit count can exceed 900,000. Though exact, they are infeasible for larger instances.
-- **BestFS**: Achieves the same optimal cost as DFS/BFS but visits far fewer nodes due to pruning. MST-based lower bounds reduce visits by up to 20x in large cases.
-- **Held-Karp**: Matches optimal solutions for all tested cases up to n = 10. Becomes impractical beyond n ≈ 20 due to exponential space.
-- **Nearest Neighbor**: Runs extremely fast but often produces non-optimal paths. Its error grows with city count and wider distance range.
-- **2-opt**: Improves over NN in most cases, but still not guaranteed to reach optimal. Sensitive to the starting path.
-- **Simulated Annealing**: More consistent than 2-opt, especially when tuned. Can sometimes reach near-optimal but may fluctuate.
-- **Genetic Algorithm**: Among all heuristics, GA is the most stable and closest to the exact result. In many cases it matched the optimal value.
+  **2-opt** improves over NN by iteratively reversing edges to reduce path cost. Although it always improved the NN result, the final path heavily depended on the initial route, and optimality was not guaranteed.
 
-### Quantitative Trends:
+  #### Metaheuristics
 
-- When n increases, the number of visited nodes for DFS and BFS grows factorially.
-- BestFS shows sublinear growth in visited nodes due to pruning.
-- Metaheuristics (GA, SA) scale well and provide usable results even when n = 10.
-- Distance range [1, 100] amplifies the differences between heuristics: NN and 2-opt deviate more than in [1, 10] case.
+  **Simulated Annealing (SA)** accepts worse solutions early on to escape local optima, then gradually cools. SA often produced results within 1–5% of the optimum but was sensitive to parameter tuning and showed some inconsistency.
+
+  **Genetic Algorithm (GA)** was the most reliable heuristic. Starting from a population of routes, it applied selection, crossover, and mutation to evolve better solutions. GA matched the optimal result in most cases and showed the lowest variance, making it a practical choice for larger instances.
+
+  ---
+
+  ### Node Visit Comparison
+
+  | Cities | DFS Visits | BestFS Visits | Total Nodes (n!) | BestFS Visit Ratio |
+  | ------ | ---------- | ------------- | ---------------- | ------------------ |
+  | 4      | 16         | 15            | 24               | 0.6250             |
+  | 6      | 326        | 166           | 720              | 0.2310             |
+  | 8      | 13700      | 2899          | 40320            | 0.0720             |
+  | 10     | 986410     | 40558         | 3628800          | 0.0112             |
+
+  This table shows how pruning in BestFS drastically reduces the search space, especially as `n` increases. For `n = 10`, BestFS explored only ~1.1% of the total state space.
+
+  ---
+
+  ### Additional Observations
+
+  - When the distance range expanded to `[1, 100]`, algorithms like NN performed significantly worse. Errors from greedy decisions became more costly.
+  - GA and SA were more robust to distance variation and city layout.
+  - MST-based lower bounds improved BestFS pruning, especially at larger `n`.
+
+  | Algorithm           | Key Parameters                                               |
+  | ------------------- | ------------------------------------------------------------ |
+  | Simulated Annealing | Initial Temp = 1000, Alpha = 0.995, Iterations = 10,000      |
+  | Genetic Algorithm   | Population = 50, Generations = 300, Crossover = 0.9, Mutation = 0.1 |
+  
+  ---
+  
+  ### Summary of Findings
+  
+  #### Observations:
+  
+  - **DFS / BFS**: Exhaustive and accurate but become infeasible beyond `n = 8`.
+  - **BestFS**: Accurate with major improvements in node efficiency; pruning with MST is highly effective.
+  - **Held-Karp**: Optimal results for all tested cases; grows exponentially in space.
+  - **Nearest Neighbor**: Fastest, but least accurate, especially with wide distance ranges.
+  - **2-opt**: Effective improvement over NN but sensitive to initial route.
+  - **Simulated Annealing**: Moderate consistency; sometimes close to optimal.
+  - **Genetic Algorithm**: Most stable among heuristics; often matches exact results.
+  
+  #### Quantitative Trends:
+  
+  - DFS/BFS node count grows as `n!`, making them impractical for large `n`.
+  - BestFS benefits greatly from pruning, showing subfactorial growth.
+  - Metaheuristics scale well and maintain reasonable accuracy for `n = 10`.
+  - Larger distance ranges amplify heuristic error (NN/2-opt especially).
 
 ---
 
@@ -278,6 +318,36 @@ At ten cities, problem complexity increased significantly. DFS and BFS required 
 
 ------
 
+The following table summarizes the outcomes of all algorithms on 2D geometric cities (special case). Each configuration was tested five times, and the results were highly stable.
+
+### Special Case Results Summary (2D Plane)
+
+| Cities | Algorithm   | Cost    | Visits | Notes                          |
+| ------ | ----------- | ------- | ------ | ------------------------------ |
+| 4      | DFS/BFS     | 219     | 16     | Optimal                        |
+|        | BestFS      | 219     | 15     | Slight pruning benefit         |
+|        | NN / 2-opt  | 219     | –      | Identical to exact             |
+|        | SA / GA     | 219     | –      | Identical to exact             |
+| 6      | DFS/BFS     | 277     | 326    | Optimal                        |
+|        | BestFS      | 277     | 166    | ~49% pruning                   |
+|        | NN / 2-opt  | 277     | –      | Identical to exact             |
+|        | SA / GA     | 277     | –      | Identical to exact             |
+| 8      | DFS/BFS     | 327     | 13700  | Optimal                        |
+|        | BestFS      | 327     | 2899   | ~78.8% pruning                 |
+|        | NN          | 350     | –      | Error ~7%                      |
+|        | 2-opt       | 327     | –      | Corrected to optimal           |
+|        | SA          | 329     | –      | Slight deviation (~0.6%)       |
+|        | GA          | 327     | –      | Always optimal                 |
+| 10     | DFS/BFS     | 340     | 986410 | Optimal (except Round 5: 243)  |
+|        | BestFS      | 340     | 40558  | ~95.9% pruning (Round 1~4)     |
+|        | BestFS (R5) | 243     | 17692  | Matches special optimal layout |
+|        | NN          | 361     | –      | Worst result (6% error)        |
+|        | 2-opt       | 340     | –      | Fully corrected NN             |
+|        | SA          | 351–389 | –      | Fluctuating, up to +14%        |
+|        | GA          | 340/243 | –      | Matches exact every time       |
+
+---
+
 ### **Summary of Observations**
 
 #### **Key Insights:**
@@ -305,4 +375,12 @@ At ten cities, problem complexity increased significantly. DFS and BFS required 
 
 ## VI. Conclusion
 
-Exact algorithms are valuable for small instances where the optimal solution is required, but they quickly become impractical as the number of cities grows. For city sizes of 8 or less, BestFS with an improved lower bound provides both speed and accuracy. For larger problems, heuristic methods are necessary. Among them, GA consistently performed best, while SA and 2-opt showed moderate effectiveness. NN remains the fastest but is also the riskiest in terms of solution quality. These findings help identify the most suitable algorithms depending on the size and nature of the TSP instance being solved.
+This project conducted a comprehensive comparison between exact and heuristic algorithms for solving the Traveling Salesman Problem under both generic and 2D geometric settings. 
+
+We found that exact methods like DFS, BFS, and Held-Karp guaranteed optimality but suffered from scalability issues due to their factorial or exponential time complexity. BestFS, enhanced with MST-based lower bounds, showed a dramatic improvement in efficiency by pruning the state space, making it suitable for moderate input sizes (up to n = 10).
+
+Among heuristic and metaheuristic algorithms, Genetic Algorithm (GA) proved to be the most consistent and reliable. It produced near-optimal or optimal solutions in all tested instances, especially in 2D cases. Simulated Annealing (SA) and 2-opt also provided good results with lower computational cost, though with slightly more variation.
+
+Nearest Neighbor (NN), while fast, consistently produced suboptimal results in larger or more varied input scenarios. However, combining NN with 2-opt offered a lightweight improvement.
+
+In conclusion, for small problem sizes, exact methods with pruning (BestFS + MST) are ideal. For larger instances where exact methods become impractical, GA stands out as a robust and efficient alternative. The use of multiple algorithm types offers valuable trade-offs between performance, quality, and computational cost.
