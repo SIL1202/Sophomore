@@ -1,6 +1,6 @@
-# 			HW3 Backtracking & Branch-and-Bound 
+# 	HW3 Backtracking & Branch-and-Bound 
 
-# 				Traveling Salesman Problem
+# 		Traveling Salesman Problem
 
 
 
