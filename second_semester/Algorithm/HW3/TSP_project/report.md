@@ -10,7 +10,7 @@ The Traveling Salesman Problem (TSP) is a classic NP-hard problem in combinatori
 
 Due to the factorial growth of possible routes, exact solutions become infeasible as the number of cities increases. As a result, researchers have developed various approaches to tackle TSP efficiently. These include exact algorithms (such as DFS, BFS, BestFS, and Held-Karp), greedy heuristics (like Nearest Neighbor), local optimization methods (e.g., 2-opt), and metaheuristic strategies (e.g., Simulated Annealing and Genetic Algorithms).
 
-In this project, we implement and compare these approaches under different test conditions, including random cost matrices and special-case 2D geometric instances. We also experiment with improving the pruning efficiency of BestFS using better lower bounds, such as the Minimum Spanning Tree (MST).
+In this project, I implement and compare these approaches under different test conditions, including random cost matrices and special-case 2D geometric instances. I also experiment with improving the pruning efficiency of BestFS using better lower bounds, such as the Minimum Spanning Tree (MST).
 
 ---
 
@@ -48,8 +48,7 @@ int TSP::getLowerBound(const vector<bool> &visited, int city) const {
   int minEdge = INT_MAX;
   for (int i = 0; i < n; i++) {
     if (!visited[i] && dist[city][i] > 0) {
-      minEdge = min(minEdge,
-                    dist[city][i]); // Choose minimum cost to an unvisited city
+      minEdge = min(minEdge, dist[city][i]); // Choose minimum cost to an unvisited city
     }
   }
   return (minEdge == INT_MAX ? 0 : minEdge); // Return 0 if no edge found
@@ -190,16 +189,18 @@ int tspGenetic(const vector<vector<int>> &dist, int populationSize = 50, int gen
 
 Key interface:
 
-```cpp
-int solveDFS();
-int solveBFS();
-int solveBestFS();
-int tspNearestNeighbor(...);
-int tspHeldKarp(...);
-int tsp2opt(...);
-int tspSimulatedAnnealing(...);
-int tspGenetic(...);
-```
+### Function Descriptions
+
+| Function Name                    | Description                                                  |
+| -------------------------------- | ------------------------------------------------------------ |
+| `int solveDFS()`                 | Performs brute-force DFS traversal to find the shortest TSP route. Explores all permutations. |
+| `int solveBFS()`                 | Performs BFS traversal to find the shortest route. Similar to DFS but explores breadth-wise. |
+| `int solveBestFS()`              | Uses Best-First Search with a lower-bound estimation (e.g., MST) to prune the state space tree. |
+| `int tspNearestNeighbor(...)`    | Implements the greedy nearest neighbor heuristic: at each step, chooses the closest unvisited city. |
+| `int tspHeldKarp(...)`           | Dynamic programming solution using bitmasking. Guarantees exact solution for small `n`. |
+| `int tsp2opt(...)`               | Local search heuristic: iteratively improves a given path by swapping pairs of edges. |
+| `int tspSimulatedAnnealing(...)` | Metaheuristic that probabilistically accepts worse solutions early to escape local optima. |
+| `int tspGenetic(...)`            | Metaheuristic based on genetic evolution, including crossover and mutation of routes. |
 
 
 
@@ -212,6 +213,10 @@ int tspGenetic(...);
 #### Test Setup Summary
 
 We tested TSP instances with 4, 6, 8, and 10 cities. The distances between cities were generated randomly, with values ranging from either 1 to 10 or 1 to 100. Each instance was solved using eight different algorithms, and we recorded both the total cost of the route and, where applicable, the number of nodes visited during the search. 
+
+To evaluate each algorithm, two main drivers were implemented:
+
+\- **main.cpp**: Automatically generates symmetric random distance matrices of varying sizes and ranges (e.g., [1,10], [1,100]). It calls each TSP algorithm in sequence and logs the results.
 
 Example result format:
 
@@ -295,6 +300,8 @@ Example result format:
 ## V. **Special Case Result Analysis**
 
 This section presents a detailed analysis of the experimental results for the Traveling Salesman Problem (TSP) under a special case: cities randomly distributed on a 2D plane. Each configuration was tested across five rounds with various algorithms.
+
+\- **tsp_special_case_main.cpp**: Generates 2D Euclidean city coordinates on a plane and computes the corresponding rounded distance matrix. It evaluates performance across repeated runs to observe consistency and robustness. 
 
 ![TSP Combined Output 2](./assets/combine2.png)
 
