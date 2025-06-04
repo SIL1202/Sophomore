@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 #define tp top_down
 #define bu bottom_up
