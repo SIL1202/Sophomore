@@ -57,7 +57,7 @@ A naive recursive solution $F(n) = F(n-1) + F(n-2)$ has exponential time complex
     (第 $n$ 個費氏數是 `dp[n]`。)
 
 **C++ Implementation (Tabulation - 列表法):**
-```
+```cpp
 #include <vector>
 #include <iostream>
 
@@ -80,7 +80,7 @@ C++ Implementation (Memoization - 記憶化遞迴):
 
 C++
 
-```
+```cpp
 #include <vector>
 #include <iostream>
 #include <map> // Or use a vector if n is reasonably small
@@ -157,7 +157,7 @@ Consider the base case dp[0], and how dp[i] can be derived from dp[i-1], dp[i-2]
 <!-- end list -->
 
 C++
-```
+```cpp
 
 #include <iostream>
 #include <vector>
@@ -240,13 +240,11 @@ DP Approach (動態規劃方法):
 State Definition (狀態定義): dp[i] represents the length of the longest increasing subsequence that ends with the element nums[i]. (dp[i] 代表以元素 nums[i] 結尾 的最長遞增子序列的長度。)
 Base Cases (基礎案例): dp[i] = 1 for all $i$ (each element itself is an increasing subsequence of length 1). (對於所有 $i$，$dp[i] = 1$ (每個元素本身都是長度為 1 的遞增子序列)。)
 Recurrence Relation (遞迴關係式): To calculate dp[i], we look at all previous elements nums[j] where $j < i$. If nums[j] < nums[i], it means nums[i] can extend an increasing subsequence ending at nums[j]. So, dp[i] can be dp[j] + 1. We take the maximum among all such possibilities. dp[i] = 1 + max(dp[j]) for all $0 \le j < i$ such that nums[j] < nums[i]. If no such $j$ exists, dp[i] remains 1. (要計算 dp[i]，我們查看所有 $j < i$ 的先前元素 nums[j]。如果 nums[j] < nums[i]，代表 nums[i] 可以擴展一個以 nums[j] 結尾的遞增子序列。因此，dp[i] 可以是 dp[j] + 1。我們在所有這些可能性中取最大值。) (dp[i] = 1 + max(dp[j])，其中 $0 \le j < i$ 且 nums[j] < nums[i]。如果不存在這樣的 $j$，$dp[i]保持為1`。)
-Final Answer (最終答案): The length of the LIS of the entire array is the maximum value in the dp array: max(dp[i]) for all $0 \le i < \text{length of nums}$. (整個陣列的 LIS 長度是 dp 陣列中的最大值：max(dp[i])，其中 $0 \le i < \text{nums 的長度}$。)
+Final Answer (最終答案): The length of the LIS of the entire array is the maximum value in the dp array: max(dp[i]) for all $ $0 \le i < \text{length of nums}$. (整個陣列的 LIS 長度是 dp 陣列中的最大值：max(dp[i])，其中 $0 \le i < \text{nums 的長度}$。)
 C++ Implementation (Tabulation - 列表法):
 
 C++
-```                                             
-
-
+```                                             cpp
 #include <vector>
 #include <algorithm> // For std::max_element and std::max
 
@@ -279,7 +277,6 @@ int length_of_lis_tabulation(const std::vector<int>& nums) {
     // Or simply: if (n > 0) max_len = *std::max_element(dp.begin(), dp.end()); else max_len = 0;
     return max_len;
 }
-
 ```
 Problem 2.1
 題目描述:
@@ -331,7 +328,7 @@ Hint: Follow the DP state definition and recurrence relation for LIS as describe
 
 C++
 
-```
+```cpp
 #include <iostream>
 #include <vector>
 #include <algorithm> // For std::max or std::max_element
