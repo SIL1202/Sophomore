@@ -20,7 +20,7 @@ We can classify computational problems into several types.
   > Instance: A weighted graph $G = (V, E)$, $s, t \in V$ represents start and target vertex.
   > 
   > Find a path from $s$ to $t$ which minimizes the summation of weights.
- 
+
 "Dynamic programming" (hereinafter referred to as "DP") is an algorithm design paradigm suitable for solving optimization problems and counting problems.
 
 The most naive way for solving counting problems and optimization problem is by a brute-force algorithm. Brute-Force is a general problem-solving approach that enumerates all the possible solution candidates and check/verify each candidate satisfied the constraints or not.
@@ -127,7 +127,7 @@ We can solve the problems by these steps:
    f(n-1) + f(n-2) & \text{otherwise, by 2}
    \end{cases}
    $$
- 
+
 Using the above equation set, we can solve the problem by the way we compute Fibonacci numbers. 
 
 #### Question 2. In basketball, each successful shot gains either 2 or 3 points. Please write a program to calculate how many distinct ways that a team can get exactly $n$ points. 
@@ -146,13 +146,13 @@ The coin change problem asks for combinations, not permutations. Thus, we decide
 1. Let $C_k = \{c_1, c_2, \dots, c_k\}, k \le n$. The transition function should be $f(C_k, m) \to \mathbb{N}$
 2. $a_kc_k < m \to a_k \in \{\mathbb{N}|0 \le a_c \le \lfloor  \frac{m}{c_k}\rfloor\}$. $f(C_k , m) = \sum_{i=0}^{\lfloor\frac{m}{c_k}\rfloor}f(C_{k-1},m-i \cdot c_k)$
 3. $m = 0$ shows a correct total amount, and $m < 0$ is not a legal solution. 
-  $$
-  f(C_k, m) = \begin{cases}
+$$
+f(C_k, m) = \begin{cases}
   0 & m < 0 \\
   1 & m = 0 \\
   f(C_k , m) = \sum_{i=0}^{\lfloor\frac{m}{c_k}\rfloor}f(C_{k-1},m-i \cdot c_k) & \text{otherwise}
   \end{cases}
-  $$
+$$
 
 Because $C$ is known, we can represent $C_k$ by $k$. Thus, we can use a $2$-dimension table, `dp[n][m]`, to cache the result of subproblems. Followed is a bottom-up approach implementation. 
 
@@ -175,21 +175,26 @@ int coin_change(const std::vector<int> &C, int m) {
 }
 ```
 
-Consider $f(C_k, m)$ and $f(C_k, m + c_k).
-$f(C_k, m + c_k) = \sum_{i=0}^{\lfloor\frac{m}{c_k}\rfloor+1}f(C_{k-1},m-i \cdot c_k)$
-$= \sum_{i=0}^{\lfloor\frac{m}{c_k}\rfloor}f(C_{k-1},m-i \cdot c_k) + f(C_{k-1}, m + c_k )$
-$= f(C_k, m) + f(C_{k-1}, m + c_k)$
+Consider $f(C_k, m)$ and $f(C_k, m + c_k)$.
 
+$$
+f(C_k, m + c_k) = \sum_{i=0}^{\lfloor\frac{m}{c_k}\rfloor+1}f(C_{k-1},m-i \cdot c_k)
+
+= \sum_{i=0}^{\lfloor\frac{m}{c_k}\rfloor}f(C_{k-1},m-i \cdot c_k) + f(C_{k-1}, m + c_k )
+
+= f(C_k, m) + f(C_{k-1}, m + c_k)
+$$
 Thus, we can rewrite the function
-  $$
-  f(C_k, m) = \begin{cases}
+$$
+f(C_k, m) = \begin{cases}
   0 & m < 0 \\
   1 & m = 0 \\
   f(C_k , m) = f(C_k, m - c_k) + f(C_{k-1}, m) & \text{otherwise}
   \end{cases}
-  $$
+$$
 
 then to implement like: 
+
 ```cpp
 #include <vector>
 
