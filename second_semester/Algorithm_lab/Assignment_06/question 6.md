@@ -75,7 +75,7 @@ You can design the transition function similarly to the 0/1 knapsack problem. Gi
 #### Question 5. Please modify the 0/1 Knapsack Algorithm into an Unbounded Knapsack Algorithm with space complexity $O(W)$ and design an algorithm to reconstruct the combination of items with $O(W)$.
 
 ## Bounded Knapsack Problem
-The bounded knapsack problem is a generalization of the 0/1 knapsack problem, where each item can be selected multiple times but only up to a fixed limit.
+The bounded knapsack problem is a generalization of the 0/1 knapsack problem, **where each item can be selected multiple times but only up to a fixed limit.**
 Given a set of items
 $$
 X = \{x_1, x_2, \ldots, x_n\}

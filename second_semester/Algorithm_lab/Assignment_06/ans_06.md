@@ -7,7 +7,7 @@ The given 0/1 Knapsack algorithm uses a dynamic programming (DP) approach with a
 The algorithm consists of two nested loops:
 
 ```cpp
-for (int i = 0; i <= n; i++) {
+for (int i = 0; i <= n;1i++) {
     for (int w = 0; w <= W; w++) {
         // DP transition logic
     }

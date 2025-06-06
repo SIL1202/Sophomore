@@ -4,12 +4,11 @@
 using namespace std;
 
 int longest_increasing_subsequence(const std::vector<int> &nums) {
-  if (nums.empty()) {
+  if (nums.empty())
     return 0;
-  }
+
   int n = nums.size();
   std::vector<int> dp(n, 1);
-  // Initialize dp[i] = 1 for all i // 初始化所有 dp[i] = 1
 
   for (int i = 1; i < n; ++i) {
     for (int j = 0; j < i; ++j) {
@@ -19,20 +18,7 @@ int longest_increasing_subsequence(const std::vector<int> &nums) {
     }
   }
 
-  // The LIS length is the maximum value in the dp array
-  // LIS 長度是 dp 陣列中的最大值
-  int max_len = 0;
-  if (n > 0) { // Ensure dp is not empty before accessing
-    max_len = dp[0];
-    for (int i = 1; i < n; ++i) {
-      if (dp[i] > max_len) {
-        max_len = dp[i];
-      }
-    }
-  }
-  // Or simply: if (n > 0) max_len = *std::max_element(dp.begin(), dp.end());
-  // else max_len = 0;
-  return max_len;
+  return *std::max_element(dp.begin(), dp.end());
 }
 
 int main() { // Renamed to avoid conflict

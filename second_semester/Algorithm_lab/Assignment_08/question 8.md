@@ -277,6 +277,7 @@ int length_of_lis_tabulation(const std::vector<int>& nums) {
     // Or simply: if (n > 0) max_len = *std::max_element(dp.begin(), dp.end()); else max_len = 0;
     return max_len;
 }
+
 ```
 Problem 2.1
 題目描述:
