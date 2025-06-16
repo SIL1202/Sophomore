@@ -1,0 +1,85 @@
+(* --- Define gender facts --- *)
+val males = ["Andy", "Bob", "Cecil", "Dennis", "Edward", "Felix", "Martin", "Oscar", "Quinn"];
+val females = ["Gigi", "Helen", "Iris", "Jane", "Kate", "Liz", "Nancy", "Pattie", "Rebecca"];
+
+fun is_male x = List.exists (fn y => y = x) males;
+fun is_female x = List.exists (fn y => y = x) females;
+
+(* --- Define marriages (Relation #1 support) --- *)
+val marriages = [
+  ("Bob", "Helen"), ("Helen", "Bob"),
+  ("Dennis", "Pattie"), ("Pattie", "Dennis"),
+  ("Gigi", "Martin"), ("Martin", "Gigi")
+];
+
+fun married x y = List.exists (fn (a, b) => a = x andalso b = y) marriages;
+
+(* --- Define direct parent relationships --- *)
+val parent0 = [
+  ("Andy", "Bob"),
+  ("Bob", "Cecil"),
+  ("Cecil", "Dennis"),
+  ("Dennis", "Edward"),
+  ("Edward", "Felix"),
+  ("Gigi", "Helen"),
+  ("Helen", "Iris"),
+  ("Iris", "Jane"),
+  ("Jane", "Kate"),
+  ("Kate", "Liz"),
+  ("Martin", "Nancy"),
+  ("Nancy", "Oscar"),
+  ("Oscar", "Pattie"),
+  ("Pattie", "Quinn"),
+  ("Quinn", "Rebecca")
+];
+
+(* --- Relation #1: Parent relationship--- *)
+fun parent x y =
+  List.exists (fn (a, b) => a = x andalso b = y) parent0
+  orelse List.exists (fn (a, b) => married x a andalso b = y) parent0;
+
+(* --- Relation #2: Siblings --- *)
+fun sibling x y =
+  x <> y andalso
+  List.exists (fn p => parent p x andalso parent p y) (males @ females);
+
+(* --- Relation #3: Brothers --- *)
+fun brother x y = sibling x y andalso is_male x andalso is_male y;
+
+(* --- Relation #4: Sisters --- *)
+fun sister x y = sibling x y andalso is_female x andalso is_female y;
+
+(* --- Relation #5: Cousins --- *)
+fun cousin x y =
+  List.exists (fn w =>
+    parent w x andalso
+    List.exists (fn z =>
+      parent z y andalso
+      sibling w z
+    ) (males @ females)
+  ) (males @ females);
+
+fun boolToString true = "true"
+  | boolToString false = "false";
+
+(* --- Testfunction --- *)
+fun test msg cond =
+  print (msg ^ (boolToString cond) ^ "\n");
+
+(* --- Example test function --- *)
+val _ = (
+  test "Is Iris the parent of Jane? " (parent "Iris" "Jane");
+  test "Is Jane the parent of Iris? " (parent "Jane" "Iris");
+  test "Is Iris the parent of Kate? " (parent "Iris" "Kate");
+
+  test "Are Iris and Oscar cousins? " (cousin "Iris" "Oscar");
+  test "Are Oscar and Iris cousins? " (cousin "Oscar" "Iris");
+  test "Are Oscar and Cecil cousins? " (cousin "Oscar" "Cecil");
+  test "Are Dennis and Jane cousins? " (cousin "Dennis" "Jane");
+  test "Are Felix and Rebecca cousins? " (cousin "Felix" "Rebecca");
+
+  test "Are Cecil and Iris siblings? " (sibling "Cecil" "Iris");
+  test "Are Edward and Quinn siblings? " (sibling "Edward" "Quinn");
+  test "Are Edward and Quinn brothers? " (brother "Edward" "Quinn");
+  test "Are Nancy and Helen sisters? " (sister "Nancy" "Helen")
+);

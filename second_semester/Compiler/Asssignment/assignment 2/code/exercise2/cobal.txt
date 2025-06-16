@@ -1,0 +1,175 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. STUDENT-FEE-CHECK.
+    
+       
+       DATA DIVISION.            *> declare the variable use in the program
+       WORKING-STORAGE SECTION.  *> Define variables, arrays reside in memory retained from beginning of program to end
+       
+       *> PIC 9(n): integer
+       *> PIC X(n): string
+       *> OCCURS n TIMES: array
+       *> PIC 99 VALUE : maximum = 99 and initialize to 1
+       *> V99: floating point 
+       *> WS: Working-Storage(local variable)
+       01 IDX                    PIC 99 VALUE 1.
+       01 FIDX                   PIC 99 VALUE 1.
+       01 PIDX                   PIC 99 VALUE 1.
+       01 WS-STUDENT-ID          PIC 9(9).
+       01 WS-NAME                PIC X(20).
+       01 WS-PAYMENT-TYPE        PIC X.
+       01 WS-PAID-AMOUNT         PIC 9(5)V99.
+       01 WS-REQUIRED-AMOUNT     PIC 9(5)V99.
+       01 WS-SHORT-AMOUNT        PIC 9(5)V99.
+       01 WS-TOTAL-RECEIVED      PIC 9(7)V99 VALUE 0.
+
+       01 STUDENT-PAID-TABLE.
+           05 STUDENT-PAID-ENTRY OCCURS 12 TIMES.
+               10 PAID-STUDENT-ID   PIC 9(9).
+               10 PAID-AMOUNT       PIC 9(5)V99.
+
+       01 STUDENT-INFO-TABLE.
+           05 STUDENT-INFO-ENTRY OCCURS 18 TIMES.
+               10 INFO-STUDENT-ID   PIC 9(9).
+               10 INFO-NAME         PIC X(20).
+               10 INFO-PAY-TYPE     PIC X.
+
+       01 FEES-TABLE.
+           05 FEE-ENTRY OCCURS 3 TIMES.
+               10 FEE-TYPE          PIC X.
+               10 FEE-AMOUNT        PIC 9(5)V99.
+       
+       *> Main program logic area
+       PROCEDURE DIVISION.
+       MAIN-PARA.
+           PERFORM INITIALIZE-DATA
+           PERFORM COMPUTE-TOTAL-RECEIVED
+           DISPLAY "Total amount received: " WS-TOTAL-RECEIVED
+           DISPLAY "Students with unpaid balances:"
+           PERFORM LIST-UNPAID-STUDENTS
+           STOP RUN.
+
+       INITIALIZE-DATA.
+           *> move a to b: assign a to b
+           MOVE "A"       TO FEE-TYPE(1)
+           MOVE 0         TO FEE-AMOUNT(1)
+           MOVE "B"       TO FEE-TYPE(2)
+           MOVE 21345.00  TO FEE-AMOUNT(2)
+           MOVE "C"       TO FEE-TYPE(3)
+           MOVE 42690.00  TO FEE-AMOUNT(3)
+
+           MOVE 920121005 TO PAID-STUDENT-ID(1)
+           MOVE 21345.00  TO PAID-AMOUNT(1)
+           MOVE 920121009 TO PAID-STUDENT-ID(2)
+           MOVE 21345.00  TO PAID-AMOUNT(2)
+           MOVE 920121003 TO PAID-STUDENT-ID(3)
+           MOVE 42690.00  TO PAID-AMOUNT(3)
+           MOVE 920121017 TO PAID-STUDENT-ID(4)
+           MOVE 21345.00  TO PAID-AMOUNT(4)
+           MOVE 920121012 TO PAID-STUDENT-ID(5)
+           MOVE 21345.00  TO PAID-AMOUNT(5)
+           MOVE 920121002 TO PAID-STUDENT-ID(6)
+           MOVE 21345.00  TO PAID-AMOUNT(6)
+           MOVE 920121014 TO PAID-STUDENT-ID(7)
+           MOVE 15000.00  TO PAID-AMOUNT(7)
+           MOVE 920121018 TO PAID-STUDENT-ID(8)
+           MOVE 21345.00  TO PAID-AMOUNT(8)
+           MOVE 920121011 TO PAID-STUDENT-ID(9)
+           MOVE 20000.00  TO PAID-AMOUNT(9)
+           MOVE 920121006 TO PAID-STUDENT-ID(10)
+           MOVE 42690.00  TO PAID-AMOUNT(10)
+           MOVE 920121015 TO PAID-STUDENT-ID(11)
+           MOVE 21345.00  TO PAID-AMOUNT(11)
+           MOVE 920121008 TO PAID-STUDENT-ID(12)
+           MOVE 10000.00  TO PAID-AMOUNT(12)
+
+           MOVE 920121001 TO INFO-STUDENT-ID(1)
+           MOVE "Andy"    TO INFO-NAME(1)
+           MOVE "A"       TO INFO-PAY-TYPE(1)
+           MOVE 920121002 TO INFO-STUDENT-ID(2)
+           MOVE "Bob"     TO INFO-NAME(2)
+           MOVE "B"       TO INFO-PAY-TYPE(2)
+           MOVE 920121003 TO INFO-STUDENT-ID(3)
+           MOVE "Cecil"   TO INFO-NAME(3)
+           MOVE "C"       TO INFO-PAY-TYPE(3)
+           MOVE 920121004 TO INFO-STUDENT-ID(4)
+           MOVE "Dennis"  TO INFO-NAME(4)
+           MOVE "A"       TO INFO-PAY-TYPE(4)
+           MOVE 920121005 TO INFO-STUDENT-ID(5)
+           MOVE "Edward"  TO INFO-NAME(5)
+           MOVE "B"       TO INFO-PAY-TYPE(5)
+           MOVE 920121006 TO INFO-STUDENT-ID(6)
+           MOVE "Felix"   TO INFO-NAME(6)
+           MOVE "C"       TO INFO-PAY-TYPE(6)
+           MOVE 920121007 TO INFO-STUDENT-ID(7)
+           MOVE "Gigi"    TO INFO-NAME(7)
+           MOVE "B"       TO INFO-PAY-TYPE(7)
+           MOVE 920121008 TO INFO-STUDENT-ID(8)
+           MOVE "Helen"   TO INFO-NAME(8)
+           MOVE "B"       TO INFO-PAY-TYPE(8)
+           MOVE 920121009 TO INFO-STUDENT-ID(9)
+           MOVE "Iris"    TO INFO-NAME(9)
+           MOVE "B"       TO INFO-PAY-TYPE(9)
+           MOVE 920121010 TO INFO-STUDENT-ID(10)
+           MOVE "Jane"    TO INFO-NAME(10)
+           MOVE "A"       TO INFO-PAY-TYPE(10)
+           MOVE 920121011 TO INFO-STUDENT-ID(11)
+           MOVE "Kate"    TO INFO-NAME(11)
+           MOVE "B"       TO INFO-PAY-TYPE(11)
+           MOVE 920121012 TO INFO-STUDENT-ID(12)
+           MOVE "Liz"     TO INFO-NAME(12)
+           MOVE "C"       TO INFO-PAY-TYPE(12)
+           MOVE 920121013 TO INFO-STUDENT-ID(13)
+           MOVE "Martin"  TO INFO-NAME(13)
+           MOVE "A"       TO INFO-PAY-TYPE(13)
+           MOVE 920121014 TO INFO-STUDENT-ID(14)
+           MOVE "Nancy"   TO INFO-NAME(14)
+           MOVE "B"       TO INFO-PAY-TYPE(14)
+           MOVE 920121015 TO INFO-STUDENT-ID(15)
+           MOVE "Oscar"   TO INFO-NAME(15)
+           MOVE "C"       TO INFO-PAY-TYPE(15)
+           MOVE 920121016 TO INFO-STUDENT-ID(16)
+           MOVE "Pattie"  TO INFO-NAME(16)
+           MOVE "B"       TO INFO-PAY-TYPE(16)
+           MOVE 920121017 TO INFO-STUDENT-ID(17)
+           MOVE "Quinn"   TO INFO-NAME(17)
+           MOVE "B"       TO INFO-PAY-TYPE(17)
+           MOVE 920121018 TO INFO-STUDENT-ID(18)
+           MOVE "Rebecca" TO INFO-NAME(18)
+           MOVE "B"       TO INFO-PAY-TYPE(18).
+
+       COMPUTE-TOTAL-RECEIVED.
+           *> for loop
+           PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 12
+               ADD PAID-AMOUNT(IDX) TO WS-TOTAL-RECEIVED
+           END-PERFORM.
+
+       LIST-UNPAID-STUDENTS.
+           PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 18
+               MOVE INFO-STUDENT-ID(IDX) TO WS-STUDENT-ID
+               MOVE INFO-NAME(IDX)       TO WS-NAME
+               MOVE INFO-PAY-TYPE(IDX)   TO WS-PAYMENT-TYPE
+               PERFORM FIND-REQUIRED-AMOUNT
+               PERFORM FIND-PAID-AMOUNT
+               COMPUTE WS-SHORT-AMOUNT = WS-REQUIRED-AMOUNT - 
+                                         WS-PAID-AMOUNT
+               IF WS-SHORT-AMOUNT > 0
+                   DISPLAY WS-STUDENT-ID " " WS-NAME 
+                           " Unpaid by: " WS-SHORT-AMOUNT
+               END-IF
+           END-PERFORM.
+
+
+       FIND-REQUIRED-AMOUNT.
+           PERFORM VARYING FIDX FROM 1 BY 1 UNTIL FIDX > 3
+               IF WS-PAYMENT-TYPE = FEE-TYPE(FIDX)
+                   MOVE FEE-AMOUNT(FIDX) TO WS-REQUIRED-AMOUNT
+               END-IF
+           END-PERFORM.
+
+       FIND-PAID-AMOUNT.
+           MOVE 0 TO WS-PAID-AMOUNT
+           PERFORM VARYING PIDX FROM 1 BY 1 UNTIL PIDX > 12
+               IF WS-STUDENT-ID = PAID-STUDENT-ID(PIDX)
+                   ADD PAID-AMOUNT(PIDX) TO WS-PAID-AMOUNT
+               END-IF
+           END-PERFORM.

@@ -1,0 +1,50 @@
+LM 語法：
+fun:
+    定義命名的函數: fun function_name arg1 arg2 = expression
+    ex: 
+    fun add x y = x + y
+    add 2 3  (* 回傳 5 *)
+
+fn:
+    建立匿名函數（lambda 函數）
+    ex:
+    List.map (fn x => x * 2) [1,2,3]  (* 結果: [2, 4, 6] *)
+
+=>:
+    這是函數的「箭號」，代表輸入對應到輸出：
+    ex: 
+    fn x => x + 1
+
+List.exists:
+    判斷列表中是否有至少一個元素滿足條件。
+    ex:
+    List.exists (fn x => x > 10) [1, 5, 15]  (* 回傳 true *)
+
+andalso:
+    布林運算符，用來表示「且 (AND)」，類似 &&。
+    ex:
+    x > 0 andalso x < 10
+
+msg:
+    那通常是自定義的變數名稱，可能是某段程式中：
+    ex:
+    val msg = "Hello, world!"
+
+@:（列表拼接運算子）
+    用來把兩個列表接在一起：
+    ex:
+    [1, 2] @ [3, 4]  (* 結果: [1, 2, 3, 4] *)
+
+val:
+    用來定義一個變數（不可變值）
+
+_:
+    「通配符」，意思是「我不關心這個值」
+    ex: 
+    fn (_, x) => x  (* 忽略第一個值，只取第二個 *)
+
+cond：
+    一個布林值（true 或 false）
+
+<>:
+    不等於
