@@ -1,0 +1,122 @@
+% Define gender facts
+male(andy). male(bob). male(cecil). male(dennis). male(edward).
+male(felix). male(martin). male(oscar). male(quinn).
+
+female(gigi). female(helen). female(iris). female(jane). female(kate).
+female(liz). female(nancy). female(pattie). female(rebecca).
+
+% Define marriages (Relation #1 support)
+married(bob, helen). married(helen, bob).
+married(dennis, pattie). married(pattie, dennis).
+married(gigi, martin). married(martin, gigi).
+
+% Define direct parent relationships
+parent0(andy, bob).
+parent0(bob, cecil).
+parent0(cecil, dennis).
+parent0(dennis, edward).
+parent0(edward, felix).
+
+parent0(gigi, helen).
+parent0(helen, iris).
+parent0(iris, jane).
+parent0(jane, kate).
+parent0(kate, liz).
+
+parent0(martin, nancy).
+parent0(nancy, oscar).
+parent0(oscar, pattie).
+parent0(pattie, quinn).
+parent0(quinn, rebecca).
+
+% Rule: If X and Y are married, and X is Z's parent, Y is also Z's parent (Relation #1)
+% ":-" is called the "if" operator, and it means "if the right side is true, then the left side is true"
+parent(X, Z) :- parent0(X, Z).
+parent(Y, Z) :- married(X, Y), parent0(X, Z).
+
+% Rule: Siblings share at least one parent (Relation #2)
+% "\=": not equal
+sibling(Y, Z) :-
+    parent(X, Y), parent(X, Z),
+    Y \= Z.
+
+% Rule: Brothers (Relation #3)
+brother(X, Y) :-
+    sibling(X, Y),
+    male(X),
+    male(Y).
+
+% Rule: Sisters (Relation #4)
+sister(X, Y) :-
+    sibling(X, Y),
+    female(X),
+    female(Y).
+    
+% Rule: Cousins (Relation #5)
+cousin(Y, Z) :-
+    sibling(W, X),
+    parent(W, Y),
+    parent(X, Z),
+    Y \= Z.
+
+% main function, directly search the result
+% ":-" means Initialization directive
+:- initialization(main).
+
+main :-
+    test_parent(iris, jane),
+    test_parent(jane, iris),
+    test_parent(iris, kate),
+    
+    test_cousins(iris, oscar),
+    test_cousins(oscar, iris),
+    test_cousins(oscar, cecil),
+    test_cousins(dennis, jane),
+    test_cousins(felix, rebecca),
+    
+    test_sibling(cecil, iris),
+    test_sibling(edward, quinn),
+    test_brother(edward, quinn),
+    test_sister(nancy, helen),
+    halt.
+
+% "nl" means newline
+test_parent(X, Y) :-
+    format('Testing if ~w is a parent of ~w... ', [X, Y]),
+    ( parent(X, Y) ->
+        write('true'), nl
+    ;
+        write('false'), nl
+    ).
+
+test_sibling(X, Y) :-
+    format('Testing if ~w and ~w are siblings... ', [X, Y]),
+    ( sibling(X, Y) ->
+        write('true'), nl
+    ;
+        write('false'), nl
+    ).
+
+test_sister(X, Y) :-
+    format('Testing if ~w and ~w are sisters... ', [X, Y]),
+    ( sister(X, Y) ->
+        write('true'), nl
+    ;
+        write('false'), nl
+    ).
+
+test_brother(X, Y) :-
+    format('Testing if ~w and ~w are brothers... ', [X, Y]),
+    ( brother(X, Y) ->
+        write('true'), nl
+    ;
+        write('false'), nl
+    ).
+    
+test_cousins(X, Y) :-
+    format('Testing if ~w is a cousin of ~w... ', [X, Y]),
+    (cousin(X, Y) ->
+        write('true'), nl
+    ;
+        write('false'), nl
+    ).
